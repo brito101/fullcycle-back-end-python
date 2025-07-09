@@ -17,7 +17,7 @@ class Category:
         if len(self.name) > 255:
             raise ValueError("name cannot be longer than 255")
 
-        if not self.name:
+        if not self.name:  # len(self.name) == 0
             raise ValueError("name cannot be empty")
 
     def __str__(self):
