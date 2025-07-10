@@ -7,7 +7,9 @@ from src.core.category.domain.category import Category
 
 class TestCategory:
     def test_name_is_required(self):
-        with pytest.raises(TypeError, match="missing 1 required positional argument: 'name'"):
+        with pytest.raises(
+            TypeError, match="missing 1 required positional argument: 'name'"
+        ):
             Category()
 
     def test_name_must_have_less_than_255_characters(self):
@@ -45,6 +47,7 @@ class TestCategory:
     def test_cannot_create_category_with_empty_name(self):
         with pytest.raises(ValueError, match="name cannot be empty"):
             Category(name="")
+
 
 class TestUpdateCategory:
     def test_update_category_with_name_and_description(self):

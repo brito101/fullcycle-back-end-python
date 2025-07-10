@@ -3,8 +3,14 @@ import uuid
 
 import pytest
 from src.core.category.application.category_repository import CategoryRepository
-from src.core.category.application.use_cases.exceptions import CategoryNotFound, InvalidCategory
-from src.core.category.application.use_cases.update_category import UpdateCategory, UpdateCategoryRequest
+from src.core.category.application.use_cases.exceptions import (
+    CategoryNotFound,
+    InvalidCategory,
+)
+from src.core.category.application.use_cases.update_category import (
+    UpdateCategory,
+    UpdateCategoryRequest,
+)
 from src.core.category.domain.category import Category
 
 
@@ -28,10 +34,12 @@ class TestUpdateCategory:
         category: Category,
     ):
         use_case = UpdateCategory(mock_repository)
-        use_case.execute(UpdateCategoryRequest(
-            id=category.id,
-            name="Séries",
-        ))
+        use_case.execute(
+            UpdateCategoryRequest(
+                id=category.id,
+                name="Séries",
+            )
+        )
 
         assert category.name == "Séries"
         mock_repository.update.assert_called_once_with(category)
@@ -42,14 +50,15 @@ class TestUpdateCategory:
         category: Category,
     ) -> None:
         use_case = UpdateCategory(mock_repository)
-        use_case.execute(UpdateCategoryRequest(
-            id=category.id,
-            description="Categoria de séries",
-        ))
+        use_case.execute(
+            UpdateCategoryRequest(
+                id=category.id,
+                description="Categoria de séries",
+            )
+        )
 
         assert category.description == "Categoria de séries"
         mock_repository.update.assert_called_once_with(category)
-
 
     def test_activate_category(
         self,
@@ -59,11 +68,13 @@ class TestUpdateCategory:
         category.deactivate()
 
         use_case = UpdateCategory(mock_repository)
-        use_case.execute(UpdateCategoryRequest(
-            id=category.id,
-            name="Séries",
-            is_active=True,
-        ))
+        use_case.execute(
+            UpdateCategoryRequest(
+                id=category.id,
+                name="Séries",
+                is_active=True,
+            )
+        )
 
         assert category.is_active is True
         mock_repository.update.assert_called_once_with(category)
@@ -76,14 +87,15 @@ class TestUpdateCategory:
         category.activate()
 
         use_case = UpdateCategory(mock_repository)
-        use_case.execute(UpdateCategoryRequest(
-            id=category.id,
-            is_active=False,
-        ))
+        use_case.execute(
+            UpdateCategoryRequest(
+                id=category.id,
+                is_active=False,
+            )
+        )
 
         assert category.is_active is False
         mock_repository.update.assert_called_once_with(category)
-
 
     def test_update_category_name_and_description(
         self,
@@ -91,11 +103,13 @@ class TestUpdateCategory:
         category: Category,
     ) -> None:
         use_case = UpdateCategory(mock_repository)
-        use_case.execute(UpdateCategoryRequest(
-            id=category.id,
-            name="Séries",
-            description="Categoria de séries",
-        ))
+        use_case.execute(
+            UpdateCategoryRequest(
+                id=category.id,
+                name="Séries",
+                description="Categoria de séries",
+            )
+        )
 
         assert category.name == "Séries"
         assert category.description == "Categoria de séries"

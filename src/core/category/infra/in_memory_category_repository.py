@@ -4,7 +4,7 @@ from src.core.category.domain.category import Category
 
 
 class InMemoryCategoryRepository(CategoryRepository):
-    def __init__(self, categories: list[Category]=[]):
+    def __init__(self, categories: list[Category] = []):
         self.categories: list[Category] = categories or []
 
     def save(self, category: Category) -> None:
