@@ -4,9 +4,7 @@
 
 ## 2. Desafio: implementar o caso de uso de atualizar gênero
 
-Os atributos passados devem substituir totalmente os atributos da entidade (comportamento similar ao PUT e não ao PATCH).
-
-Casos de teste (pode escolher fazer mais unitários e apenas o "happy path" de integração):
+Casos de teste:
 
 - Atualizar um Genre que não existe deve retornar um GenreNotFound Exception
 
