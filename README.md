@@ -1,9 +1,21 @@
 # FullCycle 3.0 back-end Python
 
-## 1. Desafio - Implementar API para PATCH
+## 1. Desafio: Implementar API para PATCH ✅
 
-Este desafio consiste em implementar o método PATCH na API de categorias, permitindo a atualização parcial dos campos de uma categoria (name, description, is_active). O endpoint PATCH deve aceitar qualquer combinação desses campos e atualizar apenas os valores enviados no payload.
+## 2. Desafio: implementar o caso de uso de atualizar gênero
 
-Após implementar, execute os testes automatizados para garantir que a funcionalidade está correta.
+Os atributos passados devem substituir totalmente os atributos da entidade (comportamento similar ao PUT e não ao PATCH).
 
-<img alingn="center" src="screenshots/desafio-1.png" />
+Casos de teste (pode escolher fazer mais unitários e apenas o "happy path" de integração):
+
+- Atualizar um Genre que não existe deve retornar um GenreNotFound Exception
+
+- Atualizar um Genre passando atributos inválidos deve retonar uma InvalidGenre Exception
+
+- Atualizar um Genre com categorias que não existem deve retornar um RelatedCategoriesNotFound Exception
+
+- Atualizar um Genre com categorias que existem deve atualizar o Genre corretamente
+
+- Incluir atributos como "name" e "is_active" no teste
+
+<img alingn="center" src="screenshots/desafio-2.png" />
