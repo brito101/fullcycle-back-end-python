@@ -4,7 +4,9 @@
 
 ## 2. Desafio: implementar o caso de uso de atualizar gênero ✅
 
-## 3. Implementar API de Update (PUT) com os seguintes testes:
+## 3. Desafio: Implementar API de Update para gênero
+
+Implementar API de Update (PUT) com os seguintes testes:
 
 - test_when_request_data_is_valid_then_update_genre
 
