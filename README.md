@@ -2,18 +2,16 @@
 
 ## 1. Desafio: Implementar API para PATCH ✅
 
-## 2. Desafio: implementar o caso de uso de atualizar gênero
+## 2. Desafio: implementar o caso de uso de atualizar gênero ✅
 
-Casos de teste:
+## 3. Implementar API de Update (PUT) com os seguintes testes
 
-- Atualizar um Genre que não existe deve retornar um GenreNotFound Exception
+- test_when_request_data_is_valid_then_update_genre
 
-- Atualizar um Genre passando atributos inválidos deve retonar uma InvalidGenre Exception
+- test_when_request_data_is_invalid_then_return_400
 
-- Atualizar um Genre com categorias que não existem deve retornar um RelatedCategoriesNotFound Exception
+- test_when_related_categories_do_not_exist_then_return_400
 
-- Atualizar um Genre com categorias que existem deve atualizar o Genre corretamente
+- test_when_genre_does_not_exist_then_return_404
 
-- Incluir atributos como "name" e "is_active" no teste
-
-<img alingn="center" src="screenshots/desafio-2.png" />
+![Desafio 3](screenshots/desafio-3.png)
