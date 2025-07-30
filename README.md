@@ -4,16 +4,10 @@
 
 ## 2. Desafio: implementar o caso de uso de atualizar gênero ✅
 
-## 3. Desafio: Implementar API de Update para gênero
+## 3. Desafio: Implementar API de Update para gênero ✅
 
-Implementar API de Update (PUT) com os seguintes testes:
+## 4. Desafio: API CastMember
 
-- test_when_request_data_is_valid_then_update_genre
+O objetivo deste desafio é implementar uma aplicação Django que gerencie membros de elenco de filmes ou séries, conhecidos como CastMembers.
 
-- test_when_request_data_is_invalid_then_return_400
-
-- test_when_related_categories_do_not_exist_then_return_400
-
-- test_when_genre_does_not_exist_then_return_404
-
-![Desafio 3](screenshots/desafio-3.png)
+![Desafio 4](screenshots/desafio-4.png)
