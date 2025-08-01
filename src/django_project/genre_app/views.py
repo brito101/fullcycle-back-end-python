@@ -12,11 +12,16 @@ from rest_framework.status import (
 )
 
 from src.core.genre.application.use_cases import (
-    ListGenre,
     CreateGenre,
     DeleteGenre,
     UpdateGenre,
 )
+from src.core.genre.application.use_cases.list_genre import (
+    ListGenre,
+    ListGenreRequest,
+    ListGenreResponse,
+)
+from src.core._shared.infra.django.views import ListViewSet
 from src.core.genre.application.use_cases.exceptions import (
     GenreNotFound,
     InvalidGenre,
@@ -33,16 +38,12 @@ from src.django_project.genre_app.serializers import (
 )
 
 
-class GenreViewSet(viewsets.ViewSet):
-    def list(self, request: Request) -> Response:
-        use_case = ListGenre(repository=DjangoORMGenreRepository())
-        output: ListGenre.Input = use_case.execute(ListGenre.Input())
-        response_serializer = ListGenreOutputSerializer(output)
+class GenreViewSet(ListViewSet, viewsets.ViewSet):
+    def _get_use_case(self) -> ListGenre:
+        return ListGenre(repository=DjangoORMGenreRepository())
 
-        return Response(
-            status=HTTP_200_OK,
-            data=response_serializer.data,
-        )
+    def _get_response_serializer(self, output: ListGenreResponse):
+        return ListGenreOutputSerializer(output)
 
     def create(self, request: Request) -> Response:
         serializer = CreateGenreInputSerializer(data=request.data)

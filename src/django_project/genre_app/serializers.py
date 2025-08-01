@@ -1,5 +1,10 @@
 from rest_framework import serializers
 
+from src.core._shared.infra.django.serializers import (
+    ListResponseSerializer,
+    ListOutputMetaSerializer,
+)
+
 
 class GenreOutputSerializer(serializers.Serializer):
     id = serializers.UUIDField()
@@ -8,8 +13,9 @@ class GenreOutputSerializer(serializers.Serializer):
     categories = serializers.ListField(child=serializers.UUIDField())
 
 
-class ListGenreOutputSerializer(serializers.Serializer):
-    data = GenreOutputSerializer(many=True)
+class ListGenreOutputSerializer(ListResponseSerializer):
+    def _get_item_serializer(self) -> serializers.Serializer:
+        return GenreOutputSerializer()
 
 
 class SetField(serializers.ListField):

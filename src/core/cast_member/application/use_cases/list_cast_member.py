@@ -1,22 +1,31 @@
 from dataclasses import dataclass
-from typing import List
+from uuid import UUID
 
+from src.core._shared.application.use_cases.list_use_case import (
+    ListUseCase,
+    ListRequest,
+    ListResponse,
+)
 from src.core.cast_member.domain.cast_member import CastMember
 from src.core.cast_member.domain.cast_member_repository import CastMemberRepository
 
 
-class ListCastMember:
-    def __init__(self, repository: CastMemberRepository):
-        self.repository = repository
+@dataclass
+class CastMemberOutput:
+    id: UUID
+    name: str
+    type: str
 
-    @dataclass
-    class Input:
-        pass
 
-    @dataclass
-    class Output:
-        data: List[CastMember]
+class ListCastMember(ListUseCase[CastMember, CastMemberOutput]):
+    def _to_output(self, entity: CastMember) -> CastMemberOutput:
+        return CastMemberOutput(
+            id=entity.id,
+            name=entity.name,
+            type=entity.type.value,
+        )
 
-    def execute(self, input: Input) -> Output:
-        cast_members = self.repository.list()
-        return self.Output(data=cast_members) 
+
+# Type aliases for backward compatibility
+ListCastMemberRequest = ListRequest
+ListCastMemberResponse = ListResponse[CastMemberOutput] 

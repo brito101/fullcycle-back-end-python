@@ -1,5 +1,5 @@
 from uuid import UUID
-from django.shortcuts import render
+
 from rest_framework import viewsets
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -9,7 +9,7 @@ from rest_framework.status import (
     HTTP_404_NOT_FOUND,
     HTTP_201_CREATED,
 )
-from rest_framework.fields import UUIDField
+
 from src.core.category.application.use_cases.create_category import (
     CreateCategory,
     CreateCategoryRequest,
@@ -20,18 +20,17 @@ from src.core.category.application.use_cases.delete_category import (
 )
 from src.core.category.application.use_cases.exceptions import (
     CategoryNotFound,
-    InvalidCategory,
-)
-
-from src.core.category.application.use_cases.list_category import (
-    ListCategory,
-    ListCategoryRequest,
-    ListCategoryResponse,
 )
 from src.core.category.application.use_cases.get_category import (
     GetCategory,
     GetCategoryRequest,
 )
+from src.core.category.application.use_cases.list_category import (
+    ListCategory,
+    ListCategoryRequest,
+    ListCategoryResponse,
+)
+from src.core._shared.infra.django.views import ListViewSet
 from src.core.category.application.use_cases.update_category import (
     UpdateCategory,
     UpdateCategoryRequest,
@@ -48,18 +47,14 @@ from src.django_project.category_app.serializers import (
 )
 
 
-class CategoryViewSet(viewsets.ViewSet):
-    def list(self, request: Request) -> Response:
-        use_case = ListCategory(repository=DjangoORMCategoryRepository())
-        output: ListCategoryResponse = use_case.execute(request=ListCategoryRequest())
-        response_serializer = ListCategoryResponseSerializer(output)
+class CategoryViewSet(ListViewSet, viewsets.ViewSet):
+    def _get_use_case(self) -> ListCategory:
+        return ListCategory(repository=DjangoORMCategoryRepository())
 
-        return Response(
-            status=HTTP_200_OK,
-            data=response_serializer.data,
-        )
+    def _get_response_serializer(self, output: ListCategoryResponse):
+        return ListCategoryResponseSerializer(output)
 
-    def retrieve(self, request: Request, pk=None) -> Response:
+    def retrieve(self, request: Request, pk: UUID = None) -> Response:
         serializer = RetrieveCategoryRequestSerializer(data={"id": pk})
         serializer.is_valid(raise_exception=True)
 
@@ -90,7 +85,7 @@ class CategoryViewSet(viewsets.ViewSet):
             data=CreateCategoryResponseSerializer(output).data,
         )
 
-    def update(self, request: Request, pk=None):
+    def update(self, request: Request, pk: UUID = None):
         serializer = UpdateCategoryRequestSerializer(
             data={
                 **request.data,
@@ -108,9 +103,13 @@ class CategoryViewSet(viewsets.ViewSet):
 
         return Response(status=HTTP_204_NO_CONTENT)
 
-    def partial_update(self, request, pk=None) -> Response:
+    def partial_update(self, request, pk: UUID = None):
         serializer = UpdateCategoryRequestSerializer(
-            data={**request.data, "id": pk}, partial=True
+            data={
+                **request.data,
+                "id": pk,
+            },
+            partial=True,
         )
         serializer.is_valid(raise_exception=True)
 
@@ -123,7 +122,7 @@ class CategoryViewSet(viewsets.ViewSet):
 
         return Response(status=HTTP_204_NO_CONTENT)
 
-    def destroy(self, request: Request, pk=None):
+    def destroy(self, request: Request, pk: UUID = None):
         request_data = DeleteCategoryRequestSerializer(data={"id": pk})
         request_data.is_valid(raise_exception=True)
 

@@ -97,17 +97,31 @@ class TestListAPI:
 
         assert response.status_code == status.HTTP_200_OK
         assert response.data["data"]
-        assert response.data["data"][0]["id"] == str(genre_romance.id)
-        assert response.data["data"][0]["name"] == "Romance"
-        assert response.data["data"][0]["is_active"] is True
-        assert set(response.data["data"][0]["categories"]) == {
-            str(category_documentary.id),
-            str(category_movie.id),
-        }
-        assert response.data["data"][1]["id"] == str(genre_drama.id)
-        assert response.data["data"][1]["name"] == "Drama"
-        assert response.data["data"][1]["is_active"] is True
-        assert response.data["data"][1]["categories"] == []
+        
+        # Check that both genres are in the response (order doesn't matter due to sorting)
+        genre_ids = [genre["id"] for genre in response.data["data"]]
+        assert str(genre_romance.id) in genre_ids
+        assert str(genre_drama.id) in genre_ids
+        
+        # Check meta information
+        assert "meta" in response.data
+        assert response.data["meta"]["current_page"] == 1
+        assert response.data["meta"]["per_page"] == 2
+        assert response.data["meta"]["total"] == 2
+        
+        # Find each genre by ID and verify its data
+        for genre_data in response.data["data"]:
+            if genre_data["id"] == str(genre_romance.id):
+                assert genre_data["name"] == "Romance"
+                assert genre_data["is_active"] is True
+                assert set(genre_data["categories"]) == {
+                    str(category_documentary.id),
+                    str(category_movie.id),
+                }
+            elif genre_data["id"] == str(genre_drama.id):
+                assert genre_data["name"] == "Drama"
+                assert genre_data["is_active"] is True
+                assert genre_data["categories"] == []
 
 
 @pytest.mark.django_db

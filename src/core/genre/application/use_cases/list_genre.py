@@ -1,6 +1,12 @@
 from dataclasses import dataclass
 from uuid import UUID
 
+from src.core._shared.application.use_cases.list_use_case import (
+    ListUseCase,
+    ListRequest,
+    ListResponse,
+)
+from src.core.genre.domain.genre import Genre
 from src.core.genre.domain.genre_repository import GenreRepository
 
 
@@ -12,29 +18,16 @@ class GenreOutput:
     is_active: bool
 
 
-class ListGenre:
-    def __init__(self, repository: GenreRepository):
-        self.repository = repository
+class ListGenre(ListUseCase[Genre, GenreOutput]):
+    def _to_output(self, entity: Genre) -> GenreOutput:
+        return GenreOutput(
+            id=entity.id,
+            name=entity.name,
+            categories=entity.categories,
+            is_active=entity.is_active,
+        )
 
-    @dataclass
-    class Input:
-        pass
 
-    @dataclass
-    class Output:
-        data: list[GenreOutput]
-
-    def execute(self, input: Input) -> Output:
-        genres = self.repository.list()
-
-        data = [
-            GenreOutput(
-                id=genre.id,
-                name=genre.name,
-                categories=genre.categories,
-                is_active=genre.is_active,
-            )
-            for genre in genres
-        ]
-
-        return self.Output(data=data)
+# Type aliases for backward compatibility
+ListGenreRequest = ListRequest
+ListGenreResponse = ListResponse[GenreOutput]

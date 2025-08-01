@@ -1,6 +1,14 @@
 from dataclasses import dataclass
 from uuid import UUID
+
+from src.core._shared.application.use_cases.list_use_case import (
+    ListUseCase,
+    ListRequest,
+    ListResponse,
+)
+from src.core.category.domain.category import Category
 from src.core.category.domain.category_repository import CategoryRepository
+
 
 @dataclass
 class CategoryOutput:
@@ -10,31 +18,16 @@ class CategoryOutput:
     is_active: bool
 
 
-@dataclass
-class ListCategoryRequest:
-    pass
-
-
-@dataclass
-class ListCategoryResponse:
-    data: list[CategoryOutput]
-
-
-class ListCategory:
-    def __init__(self, repository: CategoryRepository) -> None:
-        self.repository = repository
-
-    def execute(self, request: ListCategoryRequest) -> ListCategoryResponse:
-        categories = self.repository.list()
-
-        return ListCategoryResponse(
-            data=[
-                CategoryOutput(
-                    id=category.id,
-                    name=category.name,
-                    description=category.description,
-                    is_active=category.is_active,
-                )
-                for category in categories
-            ]
+class ListCategory(ListUseCase[Category, CategoryOutput]):
+    def _to_output(self, entity: Category) -> CategoryOutput:
+        return CategoryOutput(
+            id=entity.id,
+            name=entity.name,
+            description=entity.description,
+            is_active=entity.is_active,
         )
+
+
+# Type aliases for backward compatibility
+ListCategoryRequest = ListRequest
+ListCategoryResponse = ListResponse[CategoryOutput]

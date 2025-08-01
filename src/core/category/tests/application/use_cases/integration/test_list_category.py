@@ -8,6 +8,7 @@ from src.core.category.application.use_cases.list_category import (
     ListCategoryRequest,
     ListCategoryResponse,
 )
+from src.core._shared.application.use_cases.list_use_case import ListOutputMeta
 from src.core.category.domain.category import Category
 from src.core.category.infra.in_memory_category_repository import (
     InMemoryCategoryRepository,
@@ -62,5 +63,10 @@ class TestListCategory:
                     description=category_series.description,
                     is_active=category_series.is_active,
                 ),
-            ]
+            ],
+            meta=ListOutputMeta(
+                current_page=1,
+                per_page=2,
+                total=2,
+            ),
         )
