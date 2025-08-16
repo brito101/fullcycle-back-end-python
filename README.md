@@ -8,14 +8,17 @@
 
 ## 4. Desafio: API CastMember ✅
 
-## 5. Desafio: Paginação, refatoração e abstração
+## 5. Desafio: Paginação, refatoração e abstração ✅
 
-Parte 1: Adicionando paginação aos outros domínios:
-A primeira parte do desafio é implementar a paginação correta para os outros 3 domínios
+## 6. Desafio: Video API
 
-Parte 2: Refatoração/Abstração
-Você deve ter percebido que a listagem é uma operação muito parecido entre os diferentes domínios.
+Implementar a camada de API para o use case CreateVideoWithoutMedia.
 
-Tente abstrair e diminuir a duplicação de código para a listagem de entidades, tanto para a camada de aplicação quanto para a API (Views/Serializers).
+Escrever pelo menos 2 testes end-to-end
 
-![Desafio 5](screenshots/desafio-5.png)
+- Um para o caso de sucesso - video persistido.
+- Um para o caso de falha - qualquer erro (ou múltiplos erros).
+
+Escrever testes unitários para o usecase CreateVideoWithoutMedia
+
+![Desafio 5](screenshots/desafio-6.png)
