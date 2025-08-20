@@ -10,15 +10,6 @@
 
 ## 5. Desafio: Paginação, refatoração e abstração ✅
 
-## 6. Desafio: Video API
+## 6. Desafio: Video API ✅
 
-Implementar a camada de API para o use case CreateVideoWithoutMedia.
-
-Escrever pelo menos 2 testes end-to-end
-
-- Um para o caso de sucesso - video persistido.
-- Um para o caso de falha - qualquer erro (ou múltiplos erros).
-
-Escrever testes unitários para o usecase CreateVideoWithoutMedia
-
-![Desafio 5](screenshots/desafio-6.png)
+![Desafio 6](screenshots/desafio-6.png)
