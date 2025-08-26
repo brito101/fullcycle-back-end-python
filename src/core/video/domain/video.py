@@ -8,6 +8,7 @@ from src.core.video.domain.value_objects import (
     ImageMedia,
     AudioVideoMedia,
     MediaStatus,
+    MediaType,
 )
 
 
@@ -19,7 +20,7 @@ class Video(Entity):
     duration: Decimal
     rating: Rating
     opened: bool
-    published: bool = field(default=False, init=False)
+    published: bool = False
 
     categories: set[UUID]
     genres: set[UUID]
@@ -89,4 +90,13 @@ class Video(Entity):
 
     def update_trailer(self, trailer: AudioVideoMedia) -> None:
         self.trailer = trailer
+        self.validate()
+
+    def process(self, status: MediaStatus, encoded_location: str = "") -> None:
+        if status == MediaStatus.COMPLETED:
+            self.video = self.video.complete(encoded_location)
+            self.publish()
+        else:
+            self.video = self.video.fail()
+
         self.validate()

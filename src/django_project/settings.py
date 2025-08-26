@@ -53,6 +53,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "src.django_project.video_app.middleware.ServiceInjectionMiddleware",
 ]
 
 ROOT_URLCONF = "src.django_project.urls"

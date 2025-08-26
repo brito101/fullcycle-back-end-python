@@ -21,13 +21,18 @@ class DjangoORMVideoRepository(VideoRepository):
                 published=video.published,
             )
             video_model.categories.set(video.categories)
-            video_model.genres.set(video.genres)
             video_model.cast_members.set(video.cast_members)
+            video_model.genres.set(video.genres)
+            
+            # Atribuir o ID do modelo ORM de volta à entidade
+            video.id = video_model.id
 
     def get_by_id(self, id: UUID) -> Video | None:
         try:
             video_model = VideoORM.objects.get(pk=id)
-            return Video(
+            
+            # Criar a entidade Video
+            video = Video(
                 id=video_model.id,
                 title=video_model.title,
                 description=video_model.description,
@@ -39,6 +44,19 @@ class DjangoORMVideoRepository(VideoRepository):
                 genres=set(video_model.genres.values_list("id", flat=True)),
                 cast_members=set(video_model.cast_members.values_list("id", flat=True)),
             )
+            
+            # Adicionar mídia se existir
+            if video_model.video:
+                from src.core.video.domain.value_objects import AudioVideoMedia, MediaStatus, MediaType
+                video.video = AudioVideoMedia(
+                    name=video_model.video.name,
+                    raw_location=video_model.video.raw_location,
+                    encoded_location=video_model.video.encoded_location,
+                    status=MediaStatus(video_model.video.status),
+                    media_type=MediaType.VIDEO,  # Assumindo que é sempre VIDEO para este campo
+                )
+            
+            return video
         except VideoORM.DoesNotExist:
             return None
 
@@ -80,6 +98,7 @@ class DjangoORMVideoRepository(VideoRepository):
                 video_model.video = AudioVideoMedia.objects.create(
                     name=video.video.name,
                     raw_location=video.video.raw_location,
+                    encoded_location=video.video.encoded_location,
                     status=video.video.status,
                 ) if video.video else None
 

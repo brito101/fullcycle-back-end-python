@@ -7,11 +7,16 @@ from rest_framework.response import Response
 from rest_framework.status import (
     HTTP_201_CREATED,
     HTTP_400_BAD_REQUEST,
+    HTTP_200_OK,
 )
+from rest_framework.decorators import action
 
 from src.core.video.application.use_cases.create_video_without_media import CreateVideoWithoutMedia
-from src.core.video.application.use_cases.exceptions import InvalidVideo, RelatedEntitiesNotFound
+from src.core.video.application.use_cases.upload_video import UploadVideo
+from src.core.video.application.use_cases.exceptions import InvalidVideo, RelatedEntitiesNotFound, VideoNotFound
 from src.core.video.domain.value_objects import Rating
+from src.core._shared.infra.storage.abstract_storage import AbstractStorage
+from src.core._shared.events.message_bus import MessageBus
 from src.django_project.cast_member_app.repository import DjangoORMCastMemberRepository
 from src.django_project.category_app.repository import DjangoORMCategoryRepository
 from src.django_project.genre_app.repository import DjangoORMGenreRepository
@@ -59,4 +64,72 @@ class VideoViewSet(viewsets.ViewSet):
             return Response(
                 status=HTTP_400_BAD_REQUEST,
                 data={"error": str(e)},
+            )
+
+    @action(detail=True, methods=['post'], url_path='upload-media')
+    def upload_media(self, request: Request, pk: str) -> Response:
+        print(f"Debug: Iniciando upload para video ID: {pk}")
+        print(f"Debug: Request FILES: {request.FILES}")
+        print(f"Debug: Request data: {request.data}")
+        
+        try:
+            video_id = UUID(pk)
+        except ValueError:
+            print(f"Debug: ID inválido: {pk}")
+            return Response(
+                status=HTTP_400_BAD_REQUEST,
+                data={"error": "Invalid video ID"},
+            )
+
+        # Get file from request
+        if 'file' not in request.FILES:
+            print(f"Debug: Nenhum arquivo encontrado em request.FILES")
+            return Response(
+                status=HTTP_400_BAD_REQUEST,
+                data={"error": "No file provided"},
+            )
+
+        file = request.FILES['file']
+        file_name = file.name
+        content = file.read()
+        content_type = file.content_type
+        
+        print(f"Debug: Arquivo recebido - Nome: {file_name}, Tipo: {content_type}, Tamanho: {len(content)}")
+
+        try:
+            print(f"Debug: Criando use case UploadVideo")
+            use_case = UploadVideo(
+                repository=DjangoORMVideoRepository(),
+                storage_service=request.storage_service if hasattr(request, 'storage_service') else None,
+                message_bus=request.message_bus if hasattr(request, 'message_bus') else None,
+            )
+            
+            print(f"Debug: Executando use case")
+            use_case.execute(
+                UploadVideo.Input(
+                    video_id=video_id,
+                    file_name=file_name,
+                    content=content,
+                    content_type=content_type,
+                )
+            )
+            
+            print(f"Debug: Upload concluído com sucesso")
+            return Response(
+                status=HTTP_200_OK,
+                data={"message": "Media uploaded successfully"},
+            )
+        except VideoNotFound as e:
+            print(f"Debug: Video não encontrado: {e}")
+            return Response(
+                status=HTTP_400_BAD_REQUEST,
+                data={"error": str(e)},
+            )
+        except Exception as e:
+            print(f"Debug: Erro inesperado: {e}")
+            import traceback
+            traceback.print_exc()
+            return Response(
+                status=HTTP_400_BAD_REQUEST,
+                data={"error": f"Upload failed: {str(e)}"},
             )

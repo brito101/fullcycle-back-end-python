@@ -12,4 +12,12 @@
 
 ## 6. Desafio: Video API ✅
 
-![Desafio 6](screenshots/desafio-6.png)
+## 7. Desafio: Teste End-to-End para Eventos
+
+Implementar um teste end-to-end que valida todo o fluxo de processamento de mídia de vídeo através de eventos RabbitMQ.
+
+![Desafio 7 - Docker](screenshots/desafio-7-docker.png)
+
+![Desafio 7](screenshots/desafio-7.png)
+
+![Desafio 7 - Consumer](screenshots/desafio-7-consumer.png)

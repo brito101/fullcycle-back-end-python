@@ -8,6 +8,7 @@ from src.core.video.domain.value_objects import (
     ImageMedia,
     AudioVideoMedia,
     MediaStatus,
+    MediaType,
 )
 from src.core.video.domain.video import Video
 
@@ -52,7 +53,7 @@ class TestVideoEntity:
             banner=ImageMedia("banner.jpg", "path/to/banner"),
             thumbnail=None,  # Testing None value for an optional attribute
             trailer=AudioVideoMedia(
-                "trailer.mp4", "raw_path", "encoded_path", MediaStatus.COMPLETED
+                "trailer.mp4", "raw_path", "encoded_path", MediaStatus.COMPLETED, MediaType.VIDEO
             ),
         )
         assert video.notification.has_errors is False
@@ -71,6 +72,7 @@ class TestPublish:
             raw_location="raw_path",
             encoded_location="",
             status=MediaStatus.PROCESSING,
+            media_type=MediaType.VIDEO,
         )
         with pytest.raises(
             ValueError, match="Video must be fully processed to be published"
@@ -83,6 +85,7 @@ class TestPublish:
             raw_location="raw_path",
             encoded_location="encoded_path",
             status=MediaStatus.COMPLETED,
+            media_type=MediaType.VIDEO,
         )
         video.publish()
         assert video.published is True
